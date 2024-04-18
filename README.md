@@ -1,1 +1,1 @@
-# Anamalous-Behavior-Analysis-and-Prediction
+# Anomalous-Behavior-Analysis-and-Prediction
