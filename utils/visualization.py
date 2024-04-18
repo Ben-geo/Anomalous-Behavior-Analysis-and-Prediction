@@ -1,6 +1,8 @@
 import plotly.express as px
 
 import polars as pl
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def bar_plot(data,column,title):
     """
@@ -23,7 +25,7 @@ def bar_plot(data,column,title):
         )
     return fig
 
-def proportion_plot(
+def px_proportion_plot(
         data , column,target,title
 ) :
     """
@@ -53,3 +55,31 @@ def proportion_plot(
         title=title,
     )
     return fig
+
+def plt_proportion_plot(
+        data , column,target,title
+) :
+    """
+    Args:
+        data (pl.dataframe) :
+        column (str) :
+        target (str) :
+        title (str) :
+    displays:
+        plt plot
+    """
+    counts = data.groupby(column, target).agg(pl.count())
+    target_counts = counts.groupby(column).agg(pl.col("count").sum().alias("total"))
+    proportions = counts.join(target_counts, on=column)
+    proportions = proportions.with_columns(
+        proportion=pl.col("count") / pl.col("total")
+    ).sort((column, target))
+    sns.barplot(
+        x=proportions[column].to_list(),
+        y=proportions["proportion"].to_list(),
+        hue=proportions[target],
+    )
+    plt.legend(title=target)
+    plt.xlabel(column)
+    plt.ylabel("Count")
+    plt.show()
