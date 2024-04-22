@@ -26,7 +26,7 @@ def bar_plot(data,column,title):
     return fig
 
 def px_proportion_plot(
-        data , column,target,title
+        data , column,target
 ) :
     """
     Args:
@@ -43,6 +43,7 @@ def px_proportion_plot(
     proportions = proportions.with_columns(
         proportion=pl.col("count") / pl.col("total")
     ).sort((column, target))
+    title=columns +" vs "+ target
     fig = px.bar(
         x=proportions[column].to_list(),
         y=proportions["proportion"].to_list(),
@@ -57,7 +58,7 @@ def px_proportion_plot(
     return fig
 
 def plt_proportion_plot(
-        data , column,target,title
+        data , column,target
 ) :
     """
     Args:
@@ -82,4 +83,5 @@ def plt_proportion_plot(
     plt.legend(title=target)
     plt.xlabel(column)
     plt.ylabel("Count")
+    plt.title("Distribution of "+target+" based on "+column)
     plt.show()
