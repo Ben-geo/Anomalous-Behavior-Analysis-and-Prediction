@@ -1,5 +1,5 @@
 import plotly.express as px
-
+import plotly.graph_objects as go
 import polars as pl
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -85,3 +85,54 @@ def plt_proportion_plot(
     plt.ylabel("Count")
     plt.title("Distribution of "+target+" based on "+column)
     plt.show()
+
+def boxplot_by_bin_with_target(
+    data: pl.DataFrame,
+    column_to_bin: str,
+    numeric_column: str,
+    target: str,
+    number_bins: int = 10,
+) -> go.Figure:
+    """Creates a plotly boxplot
+
+    Args:
+        data (pl.DataFrame): input dataframe
+        column_to_bin (str): numeric column to bin
+        numeric_column (str): numeric column to create a box plot from
+        target (str): target column to colour a boxplot
+        number_bins (int, optional): number of quantile bins to create. Defaults to 10.
+
+    Returns:
+        go.Figure: _description_
+    """
+
+    temp = data.select(
+        pl.col(column_to_bin)
+        .qcut(number_bins, allow_duplicates=True)
+        .alias(f"{column_to_bin}_binned"),
+        pl.col(column_to_bin),
+        pl.col(numeric_column),
+        pl.col(target),
+    )
+
+    order = (
+        temp.groupby(f"{column_to_bin}_binned")
+        .agg(pl.col(column_to_bin).min().alias("min"))
+        .sort("min")[f"{column_to_bin}_binned"]
+        .to_list()
+    )
+
+    fig = px.box(
+        x=temp[f"{column_to_bin}_binned"].to_list(),
+        y=temp[numeric_column].to_list(),
+        color=temp[target].to_list(),
+        color_discrete_sequence=px.colors.qualitative.Antique,
+        log_y=True,
+        category_orders={"x": order},
+        labels={
+            "x": "",
+            "y": numeric_column,
+        },
+    )
+
+    return fig
