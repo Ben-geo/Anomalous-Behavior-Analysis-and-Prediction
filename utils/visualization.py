@@ -43,7 +43,7 @@ def px_proportion_plot(
     proportions = proportions.with_columns(
         proportion=pl.col("count") / pl.col("total")
     ).sort((column, target))
-    title=columns +" vs "+ target
+    title=column +" vs "+ target
     fig = px.bar(
         x=proportions[column].to_list(),
         y=proportions["proportion"].to_list(),
