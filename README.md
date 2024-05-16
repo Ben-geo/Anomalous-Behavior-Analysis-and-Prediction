@@ -1,2 +1,2 @@
 # Anomalous-Behavior-Analysis-and-Prediction
-![](..\images\api.jpg)
+![](.\images\api.jpg)
