@@ -9,7 +9,9 @@
 * notebooks 
     * **cleaning.ipynb :** Cleaned the data , removed null values 
     * **eda.ipynb :**  Visualized the impact of various features on the target by performing bivariate and multivariate analysis extracting relevant information
+    * **feature_engineering.ipynb :** to Get Engineerred Features from Graph Dataset
 * utils
     * **preprocess.py :**  Functions for cleaning.py
     * **visualization.py :**  Functions for visualization
+    * **feature_engineering.py :** Functions for feature_engineering
 
